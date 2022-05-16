@@ -28,6 +28,7 @@ public class Test : MonoBehaviour
             {
                 Cutter.StartCut(Vector3.forward * gap * iteration);
                 Cutter.StartCutCube(Vector3.forward * gap * iteration);
+                Cutter.StartCutPlanes(Vector3.forward * gap * iteration);
                 Cutter.StartCutCubes(Vector3.forward * gap * iteration++);
                 timer = 0f;
                 PrismNPlane.transform.position += Vector3.up * 0.01f;

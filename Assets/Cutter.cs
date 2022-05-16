@@ -7,7 +7,7 @@ using Parabox.CSG;
 
 public class Cutter : MonoBehaviour
 {
-    public GameObject Subtractee, Plane, Cube1, Cube2;
+    public GameObject Subtractee, Plane1, Plane2, Cube1, Cube2;
     ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood;
     // Start is called before the first frame update
     void Start()
@@ -36,7 +36,7 @@ public class Cutter : MonoBehaviour
             Perform(
                 CSG.BooleanOp.Subtraction,
                 TreeWithCut.gameObject,
-                Plane,
+                Plane1,
                 "UpperHalfTree"
             );
 
@@ -133,6 +133,48 @@ public class Cutter : MonoBehaviour
         Destroy(TreeWithCut.gameObject);
 
         posShift += Vector3.right * 8;
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+    }
+
+    public void StartCutPlanes(Vector3 posShift)
+    {
+        TreeWithCut =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
+                Subtractee,
+                "TreeWithCut"
+            );
+
+        SubtractedPieceWood =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                this.gameObject,
+                Subtractee,
+                "SubtractedPieceWood"
+            );
+
+        UpperHalfTree =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                TreeWithCut.gameObject,
+                Plane1,
+                "UpperHalfTree"
+            );
+
+        LowerHalfTree =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                TreeWithCut.gameObject,
+                Plane2,
+                "LowerHalfTree"
+            );
+
+        Destroy(TreeWithCut.gameObject);
+
+        posShift += Vector3.right * 12;
         SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
         LowerHalfTree.gameObject.transform.position += posShift;
         UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;

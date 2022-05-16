@@ -7,42 +7,136 @@ using Parabox.CSG;
 
 public class Cutter : MonoBehaviour
 {
-    public GameObject Subtractee, Plane;
-    ProBuilderMesh TreeWithCut, UpperHalfTree;
+    public GameObject Subtractee, Plane, Cube1, Cube2;
+    ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood;
     // Start is called before the first frame update
     void Start()
     {
-        TreeWithCut = 
+        //StartCut();
+    }
+
+    public void StartCut(Vector3 posShift) {
+        TreeWithCut =
             Perform(
                 CSG.BooleanOp.Subtraction,
                 this.gameObject,
                 Subtractee,
                 "TreeWithCut"
-                );
-
-        Perform(
-            CSG.BooleanOp.Intersection,
-            this.gameObject,
-            Subtractee,
-            "SubtractedPieceWood"
             );
 
-        UpperHalfTree = 
+        SubtractedPieceWood =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                this.gameObject,
+                Subtractee,
+                "SubtractedPieceWood"
+            );
+
+        UpperHalfTree =
             Perform(
                 CSG.BooleanOp.Subtraction,
                 TreeWithCut.gameObject,
                 Plane,
                 "UpperHalfTree"
-                );
-
-        Perform(
-            CSG.BooleanOp.Subtraction,
-            TreeWithCut.gameObject,
-            UpperHalfTree.gameObject,
-            "LowerHalfTree"
             );
+
+        LowerHalfTree = 
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                TreeWithCut.gameObject,
+                UpperHalfTree.gameObject,
+                "LowerHalfTree"
+            );
+
+        Destroy(TreeWithCut.gameObject);
+
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
     }
 
+    public void StartCutCube(Vector3 posShift)
+    {
+        TreeWithCut =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
+                Subtractee,
+                "TreeWithCut"
+            );
+
+        SubtractedPieceWood =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                this.gameObject,
+                Subtractee,
+                "SubtractedPieceWood"
+            );
+
+        UpperHalfTree =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                TreeWithCut.gameObject,
+                Cube1,
+                "UpperHalfTree"
+            );
+
+        LowerHalfTree =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                TreeWithCut.gameObject,
+                UpperHalfTree.gameObject,
+                "LowerHalfTree"
+            );
+
+        Destroy(TreeWithCut.gameObject);
+        posShift += Vector3.right * 4;
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+    }
+
+    public void StartCutCubes(Vector3 posShift)
+    {
+        TreeWithCut =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
+                Subtractee,
+                "TreeWithCut"
+            );
+
+        SubtractedPieceWood =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                this.gameObject,
+                Subtractee,
+                "SubtractedPieceWood"
+            );
+
+        UpperHalfTree =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                TreeWithCut.gameObject,
+                Cube1,
+                "UpperHalfTree"
+            );
+
+        LowerHalfTree =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                TreeWithCut.gameObject,
+                Cube2,
+                "LowerHalfTree"
+            );
+
+        Destroy(TreeWithCut.gameObject);
+
+        posShift += Vector3.right * 8;
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+    }
     ProBuilderMesh Perform(CSG.BooleanOp booleanOp, GameObject lhs, GameObject rhs, string name)
     {
 

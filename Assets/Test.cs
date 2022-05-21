@@ -9,10 +9,12 @@ public class Test : MonoBehaviour
     float gap = 1.5f;
     int iteration = 1;
     bool stopFlag = true;
-    float timer = 0.5f;
+    public float timer = 0.5f;
+    float _timer = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
+        _timer = timer;
         Cutter = GameObject.Find("Cylinder").GetComponent<Cutter>();
     }
 
@@ -21,16 +23,18 @@ public class Test : MonoBehaviour
     {
         if (stopFlag)
         {
-            if (timer < 0.5f)
+            if (_timer < timer)
             {
-                timer += Time.deltaTime;
+                _timer += Time.deltaTime;
             } else
             {
-                Cutter.StartCut(Vector3.forward * gap * iteration);
-                Cutter.StartCutCube(Vector3.forward * gap * iteration);
-                Cutter.StartCutPlanes(Vector3.forward * gap * iteration);
-                Cutter.StartCutCubes(Vector3.forward * gap * iteration++);
-                timer = 0f;
+                //Cutter.StartCut(Vector3.forward * gap * iteration);
+                //Cutter.StartCutCube(Vector3.forward * gap * iteration);
+                Cutter.StartCutPlanes(Vector3.forward * gap * iteration++);
+                //Cutter.StartCutSlice(Vector3.forward * gap * iteration++);
+                //Cutter.StartCutCubes(Vector3.forward * gap * iteration++);
+
+                _timer = 0f;
                 PrismNPlane.transform.position += Vector3.up * 0.01f;
             }
             Debug.Log("StopFlag is false!");

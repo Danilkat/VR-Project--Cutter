@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.ProBuilder;
 using UnityEngine.ProBuilder.MeshOperations;
 using Parabox.CSG;
+using System;
 
 public class Cutter : MonoBehaviour
 {
     public GameObject Subtractee, Plane1, Plane2, Cube1, Cube2;
-    ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood;
+    ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood, Slice1, Slice2;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +54,66 @@ public class Cutter : MonoBehaviour
         SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
         LowerHalfTree.gameObject.transform.position += posShift;
         UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+    }
+
+    internal void StartCutSlice(Vector3 posShift)
+    {
+        TreeWithCut =
+            Perform(
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
+                Subtractee,
+                "TreeWithCut"
+            );
+
+        SubtractedPieceWood =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                this.gameObject,
+                Subtractee,
+                "SubtractedPieceWood"
+            );
+
+        Slice1 =
+            Perform(
+                CSG.BooleanOp.Union,
+                Plane1,
+                TreeWithCut.gameObject,
+                "UpperSlice"
+            );
+
+        Slice2 =
+            Perform(
+                CSG.BooleanOp.Union,
+                Plane2,
+                TreeWithCut.gameObject,
+                "LowerSlice"
+            );
+
+        UpperHalfTree =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                TreeWithCut.gameObject,
+                Slice2.gameObject,
+                "UpperHalfTree"
+            );
+
+        LowerHalfTree =
+            Perform(
+                CSG.BooleanOp.Intersection,
+                TreeWithCut.gameObject,
+                Slice1.gameObject,
+                "LowerHalfTree"
+            );
+
+        Destroy(TreeWithCut.gameObject);
+        posShift += Vector3.right * 17;
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        Slice1.gameObject.transform.position += posShift;
+        Slice2.gameObject.transform.position += posShift;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+
     }
 
     public void StartCutCube(Vector3 posShift)

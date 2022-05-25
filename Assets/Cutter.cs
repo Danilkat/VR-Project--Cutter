@@ -56,14 +56,14 @@ public class Cutter : MonoBehaviour
         UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
     }
 
-    internal void StartCutSlice(Vector3 posShift)
+    internal void StartCutSlice(Vector3 posShift, int number)
     {
         TreeWithCut =
             Perform(
                 CSG.BooleanOp.Subtraction,
                 this.gameObject,
                 Subtractee,
-                "TreeWithCut"
+                "TreeWithCut" + number
             );
 
         SubtractedPieceWood =
@@ -71,39 +71,38 @@ public class Cutter : MonoBehaviour
                 CSG.BooleanOp.Intersection,
                 this.gameObject,
                 Subtractee,
-                "SubtractedPieceWood"
+                "SubtractedPieceWood" + number
             );
 
         Slice1 =
             Perform(
-                CSG.BooleanOp.Union,
+                CSG.BooleanOp.MakeSlice,
                 Plane1,
                 TreeWithCut.gameObject,
-                "UpperSlice"
+                "SliceForUpper" + number
             );
 
         Slice2 =
             Perform(
-                CSG.BooleanOp.Union,
+                CSG.BooleanOp.MakeSlice,
                 Plane2,
                 TreeWithCut.gameObject,
-                "LowerSlice"
+                "SliceForLower" + number
             );
 
         UpperHalfTree =
             Perform(
-                CSG.BooleanOp.Intersection,
-                TreeWithCut.gameObject,
-                Slice2.gameObject,
-                "UpperHalfTree"
-            );
-
-        LowerHalfTree =
-            Perform(
-                CSG.BooleanOp.Intersection,
+                CSG.BooleanOp.MakeHalfOfTheTree,
                 TreeWithCut.gameObject,
                 Slice1.gameObject,
-                "LowerHalfTree"
+                "UpperHalfTree" + number
+            );
+        LowerHalfTree =
+            Perform(
+                CSG.BooleanOp.MakeHalfOfTheTree,
+                TreeWithCut.gameObject,
+                Slice2.gameObject,
+                "LowerHalfTree" + number
             );
 
         Destroy(TreeWithCut.gameObject);

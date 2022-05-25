@@ -30,8 +30,14 @@ public class Test : MonoBehaviour
             {
                 //Cutter.StartCut(Vector3.forward * gap * iteration);
                 //Cutter.StartCutCube(Vector3.forward * gap * iteration);
-                Cutter.StartCutPlanes(Vector3.forward * gap * iteration++);
-                //Cutter.StartCutSlice(Vector3.forward * gap * iteration++);
+                //Cutter.StartCutPlanes(Vector3.forward * gap * iteration++);
+                //try
+                //{
+                    Cutter.StartCutSlice(Vector3.forward * gap * iteration++, iteration);
+                //} catch (System.Exception ex)
+                //{
+                    //Debug.LogError("Bruh coplanars at " + iteration + "!!");
+                //}
                 //Cutter.StartCutCubes(Vector3.forward * gap * iteration++);
 
                 _timer = 0f;

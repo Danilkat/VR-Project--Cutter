@@ -1,0 +1,16 @@
+{
+    "name": "Parabox.CSG.Demo",
+    "rootNamespace": "",
+    "references": [
+        "Parabox.CSG"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

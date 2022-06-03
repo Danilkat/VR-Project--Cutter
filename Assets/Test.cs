@@ -33,7 +33,9 @@ public class Test : MonoBehaviour
                 //Cutter.StartCutPlanes(Vector3.forward * gap * iteration++);
                 //try
                 //{
-                    Cutter.StartCutSlice(Vector3.forward * gap * iteration++, iteration);
+                if (iteration == 165)
+                    Cutter.StartCutSlice(Vector3.forward * gap * 5, ++iteration);
+                iteration++;
                 //} catch (System.Exception ex)
                 //{
                     //Debug.LogError("Bruh coplanars at " + iteration + "!!");
@@ -43,8 +45,6 @@ public class Test : MonoBehaviour
                 _timer = 0f;
                 PrismNPlane.transform.position += Vector3.up * 0.01f;
             }
-            Debug.Log("StopFlag is false!");
         }
-        Debug.Log(timer);
     }
 }

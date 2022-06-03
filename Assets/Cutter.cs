@@ -9,7 +9,7 @@ using System;
 public class Cutter : MonoBehaviour
 {
     public GameObject Subtractee, Plane1, Plane2, Cube1, Cube2;
-    ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood, Slice1, Slice2;
+    ProBuilderMesh TreeWithCut, UpperHalfTree, LowerHalfTree, SubtractedPieceWood, Slice1, Slice2, UpperNotSliced, LowerNotSliced;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +58,77 @@ public class Cutter : MonoBehaviour
 
     internal void StartCutSlice(Vector3 posShift, int number)
     {
+        try
+        {
+            TreeWithCut =
+                Perform(
+                    CSG.BooleanOp.Subtraction,
+                    this.gameObject,
+                    Subtractee,
+                    "TreeWithCut" + number
+                );
+
+            SubtractedPieceWood =
+                Perform(
+                    CSG.BooleanOp.Intersection,
+                    this.gameObject,
+                    Subtractee,
+                    "SubtractedPieceWood" + number
+                );
+
+            Slice1 =
+                Perform(
+                    CSG.BooleanOp.MakeSlice,
+                    Plane1,
+                    TreeWithCut.gameObject,
+                    "SliceForUpper" + number
+                );
+
+            Slice2 =
+                Perform(
+                    CSG.BooleanOp.MakeSlice,
+                    Plane2,
+                    TreeWithCut.gameObject,
+                    "SliceForLower" + number
+                );
+
+            UpperHalfTree =
+                Perform(
+                    CSG.BooleanOp.MakeHalfOfTheTree,
+                    TreeWithCut.gameObject,
+                    Slice1.gameObject,
+                    "UpperHalfTree" + number
+                );
+            LowerHalfTree =
+                Perform(
+                    CSG.BooleanOp.MakeHalfOfTheTree,
+                    TreeWithCut.gameObject,
+                    Slice2.gameObject,
+                    "LowerHalfTree" + number
+                );
+
+        } catch
+        {
+            if (SubtractedPieceWood) { Destroy(SubtractedPieceWood); }
+            if (Slice1) { Destroy(Slice1); }
+            if (Slice2) { Destroy(Slice2); }
+            if (UpperHalfTree) { Destroy(UpperHalfTree); }
+            if (LowerHalfTree) { Destroy(LowerHalfTree); }
+            Destroy(TreeWithCut.gameObject);
+            return;
+        }
+        Destroy(TreeWithCut.gameObject);
+        posShift += Vector3.right * 17;
+        SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
+        Slice1.gameObject.transform.position += posShift;
+        Slice2.gameObject.transform.position += posShift;
+        LowerHalfTree.gameObject.transform.position += posShift;
+        UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
+
+    }
+
+    internal void StartCutSuper(Vector3 posShift, int number)
+    {
         TreeWithCut =
             Perform(
                 CSG.BooleanOp.Subtraction,
@@ -74,47 +145,47 @@ public class Cutter : MonoBehaviour
                 "SubtractedPieceWood" + number
             );
 
-        Slice1 =
+        UpperNotSliced =
             Perform(
-                CSG.BooleanOp.MakeSlice,
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
                 Plane1,
-                TreeWithCut.gameObject,
-                "SliceForUpper" + number
+                "UpperNotSliced" + number
             );
 
-        Slice2 =
+        LowerNotSliced =
             Perform(
-                CSG.BooleanOp.MakeSlice,
+                CSG.BooleanOp.Subtraction,
+                this.gameObject,
                 Plane2,
-                TreeWithCut.gameObject,
-                "SliceForLower" + number
+                "LowerNotSliced" + number
             );
 
         UpperHalfTree =
             Perform(
-                CSG.BooleanOp.MakeHalfOfTheTree,
-                TreeWithCut.gameObject,
-                Slice1.gameObject,
+                CSG.BooleanOp.Subtraction,
+                UpperNotSliced.gameObject,
+                Subtractee.gameObject,
                 "UpperHalfTree" + number
             );
         LowerHalfTree =
             Perform(
-                CSG.BooleanOp.MakeHalfOfTheTree,
-                TreeWithCut.gameObject,
-                Slice2.gameObject,
+                CSG.BooleanOp.Subtraction,
+                LowerNotSliced.gameObject,
+                Subtractee.gameObject,
                 "LowerHalfTree" + number
             );
-
         Destroy(TreeWithCut.gameObject);
+        Destroy(UpperNotSliced.gameObject);
+        Destroy(LowerNotSliced.gameObject);
         posShift += Vector3.right * 17;
         SubtractedPieceWood.gameObject.transform.position += posShift + Vector3.right * 2;
-        Slice1.gameObject.transform.position += posShift;
-        Slice2.gameObject.transform.position += posShift;
+        //Slice1.gameObject.transform.position += posShift;
+        //Slice2.gameObject.transform.position += posShift;
         LowerHalfTree.gameObject.transform.position += posShift;
         UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
 
     }
-
     public void StartCutCube(Vector3 posShift)
     {
         TreeWithCut =
@@ -197,6 +268,8 @@ public class Cutter : MonoBehaviour
         LowerHalfTree.gameObject.transform.position += posShift;
         UpperHalfTree.gameObject.transform.position += posShift + Vector3.up * 2;
     }
+
+
 
     public void StartCutPlanes(Vector3 posShift)
     {

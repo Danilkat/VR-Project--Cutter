@@ -33,7 +33,7 @@ namespace Parabox.CSG
             MakeHalfOfTheTree
         }
 
-        const float k_DefaultEpsilon = 0.0000004f;
+        const float k_DefaultEpsilon = 0.00001f;
         static float s_Epsilon = k_DefaultEpsilon;
 
         /// <summary>

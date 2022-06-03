@@ -33,9 +33,7 @@ public class Test : MonoBehaviour
                 //Cutter.StartCutPlanes(Vector3.forward * gap * iteration++);
                 //try
                 //{
-                if (iteration == 165)
-                    Cutter.StartCutSlice(Vector3.forward * gap * 5, ++iteration);
-                iteration++;
+                Cutter.StartCutSuper(Vector3.forward * gap * iteration, ++iteration);
                 //} catch (System.Exception ex)
                 //{
                     //Debug.LogError("Bruh coplanars at " + iteration + "!!");

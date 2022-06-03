@@ -16,8 +16,8 @@ namespace Parabox.CSG
 
         public Node()
         {
-            front = null;
-            back = null;
+            this.front = null;
+            this.back = null;
         }
 
         public Node(List<Polygon> list)
@@ -89,42 +89,39 @@ namespace Parabox.CSG
             if (list.Count < 1)
                 return;
 
-            bool newNode = plane == null || !plane.Valid(); 
-
-            if (newNode)
+            if (this.plane == null || !this.plane.Valid())
             {
-                plane = new Plane();
-                plane.normal = list[0].plane.normal;
-                plane.w = list[0].plane.w;
+                this.plane = new Plane();
+                this.plane.normal = list[0].plane.normal;
+                this.plane.w = list[0].plane.w;
             }
 
-            if (polygons == null)
-                polygons = new List<Polygon>();
-                
-            var listFront = new List<Polygon>();
-            var listBack = new List<Polygon>();
+
+            if (this.polygons == null)
+                this.polygons = new List<Polygon>();
+
+            List<Polygon> list_front = new List<Polygon>();
+            List<Polygon> list_back = new List<Polygon>();
 
             for (int i = 0; i < list.Count; i++)
-                plane.SplitPolygon(list[i], polygons, polygons, listFront, listBack);
-            
-            
-            if (listFront.Count > 0)
-            {                
-                // SplitPolygon can fail to correctly identify coplanar planes when the epsilon value is too low. When
-                // this happens, the front or back list will be filled and built into a new node recursively. This 
-                // check catches that case and sorts the front/back lists into the coplanar polygons collection.
-                if (newNode && list.SequenceEqual(listFront))
-                    polygons.AddRange(listFront);
-                else
-                    (front ?? (front = new Node())).Build(listFront);
+            {
+                this.plane.SplitPolygon(list[i], this.polygons, this.polygons, list_front, list_back);
             }
 
-            if (listBack.Count > 0)
+            if (list_front.Count > 0)
             {
-                if (newNode && list.SequenceEqual(listBack))
-                    polygons.AddRange(listBack);
-                else
-                    (back ?? (back = new Node())).Build(listBack);
+                if (this.front == null)
+                    this.front = new Node();
+
+                this.front.Build(list_front);
+            }
+
+            if (list_back.Count > 0)
+            {
+                if (this.back == null)
+                    this.back = new Node();
+
+                this.back.Build(list_back);
             }
         }
 
@@ -133,7 +130,6 @@ namespace Parabox.CSG
         {
             if (!this.plane.Valid())
             {
-                Debug.Log("Invalid plane XDDDDDDDDD");
                 return list;
             }
 
